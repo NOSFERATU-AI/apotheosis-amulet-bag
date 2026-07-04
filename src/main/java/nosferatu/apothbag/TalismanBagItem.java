@@ -125,6 +125,17 @@ public class TalismanBagItem extends Item {
         setBagData(stack, tag);
     }
 
+    public static boolean hasStoredItemsFast(ItemStack stack) {
+        if (stack.isEmpty()) return false;
+
+        CompoundTag tag = getBagData(stack);
+        int unlocked = tag.getInt(TAG_UNLOCKED);
+        if (unlocked <= 0) return false;
+
+        if (!tag.contains(TAG_ITEMS, Tag.TAG_LIST)) return false;
+        return tag.getList(TAG_ITEMS, Tag.TAG_COMPOUND).size() > 0;
+    }
+
     @SuppressWarnings("unchecked")
     private static void initApotheosisReflection() {
         if (apotheosisReflectionTried) return;
