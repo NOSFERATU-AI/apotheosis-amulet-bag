@@ -1,0 +1,12 @@
+{
+  "item.apoth_talisman_bag.talisman_bag": "Amulet Bag",
+  "item.apoth_talisman_bag.locked_slot": "Locked Slot",
+  "container.apoth_talisman_bag.talisman_bag": "Amulet Bag",
+  "tooltip.apoth_talisman_bag.unlocked": "Unlocked slots: %s/%s",
+  "tooltip.apoth_talisman_bag.next_cost": "Next slot cost: %s levels",
+  "tooltip.apoth_talisman_bag.open": "Right-click: open",
+  "tooltip.apoth_talisman_bag.unlock": "Sneak + right-click: unlock next slot",
+  "message.apoth_talisman_bag.all_slots_unlocked": "All bag slots are already unlocked.",
+  "message.apoth_talisman_bag.not_enough_levels": "Need %s levels to unlock the next slot.",
+  "message.apoth_talisman_bag.slot_unlocked": "Unlocked slot %s for %s levels."
+}
