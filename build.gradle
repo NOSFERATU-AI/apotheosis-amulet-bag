@@ -1,7 +1,3 @@
-import javax.imageio.ImageIO
-import java.awt.Color
-import java.awt.image.BufferedImage
-
 plugins {
     id 'java-library'
     id 'maven-publish'
@@ -15,8 +11,6 @@ group = mod_group_id
 base { archivesName = mod_id }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
-
-def generatedTextureModId = 'apoth_talisman_bag'
 
 repositories {
     mavenCentral()
@@ -36,67 +30,6 @@ neoForge {
     mods {
         "${mod_id}" { sourceSet(sourceSets.main) }
     }
-}
-
-tasks.named('processResources') {
-    doLast {
-        writeGeneratedBagTexture(new File(destinationDir, "assets/${generatedTextureModId}/textures/item/talisman_bag.png"))
-        writeGeneratedLockedSlotTexture(new File(destinationDir, "assets/${generatedTextureModId}/textures/item/locked_slot.png"))
-    }
-}
-
-def writeGeneratedBagTexture(File target) {
-    target.parentFile.mkdirs()
-    def img = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB)
-    def g = img.createGraphics()
-    g.setColor(new Color(0, 0, 0, 0)); g.fillRect(0, 0, 32, 32)
-
-    // Shadow / outline
-    g.setColor(new Color(18, 18, 28, 255)); g.fillRect(9, 9, 14, 18)
-    g.setColor(new Color(18, 18, 28, 255)); g.fillRect(7, 13, 18, 13)
-    g.setColor(new Color(18, 18, 28, 255)); g.fillRect(11, 5, 10, 6)
-
-    // Main bag body
-    g.setColor(new Color(35, 55, 86, 255)); g.fillRect(10, 10, 12, 16)
-    g.setColor(new Color(42, 70, 112, 255)); g.fillRect(8, 14, 16, 11)
-    g.setColor(new Color(23, 36, 60, 255)); g.fillRect(20, 14, 4, 11)
-    g.setColor(new Color(20, 31, 50, 255)); g.fillRect(8, 23, 16, 3)
-
-    // Top cloth / cap
-    g.setColor(new Color(230, 235, 239, 255)); g.fillRect(10, 9, 12, 3)
-    g.setColor(new Color(190, 198, 208, 255)); g.fillRect(18, 10, 4, 2)
-
-    // Red charm ribbon
-    g.setColor(new Color(160, 22, 44, 255)); g.fillRect(7, 13, 3, 10)
-    g.setColor(new Color(210, 36, 55, 255)); g.fillRect(7, 14, 2, 3)
-    g.setColor(new Color(105, 12, 31, 255)); g.fillRect(7, 22, 3, 3)
-
-    // Neck / stopper
-    g.setColor(new Color(12, 15, 22, 255)); g.fillRect(13, 5, 6, 4)
-    g.setColor(new Color(35, 40, 52, 255)); g.fillRect(14, 4, 4, 2)
-
-    // Small golden amulet mark
-    g.setColor(new Color(235, 188, 55, 255)); g.fillRect(24, 18, 2, 2)
-    g.setColor(new Color(245, 216, 95, 255)); g.fillRect(25, 17, 2, 2)
-    g.setColor(new Color(130, 86, 16, 255)); g.fillRect(26, 19, 1, 2)
-
-    g.dispose()
-    ImageIO.write(img, 'png', target)
-}
-
-def writeGeneratedLockedSlotTexture(File target) {
-    target.parentFile.mkdirs()
-    def img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
-    def g = img.createGraphics()
-    g.setColor(new Color(0, 0, 0, 0)); g.fillRect(0, 0, 16, 16)
-    g.setColor(new Color(30, 30, 38, 210)); g.fillRect(3, 6, 10, 7)
-    g.setColor(new Color(8, 8, 14, 255)); g.drawRect(3, 6, 9, 6)
-    g.setColor(new Color(92, 92, 105, 230)); g.fillRect(5, 4, 6, 2)
-    g.setColor(new Color(8, 8, 14, 255)); g.drawRect(5, 3, 5, 4)
-    g.setColor(new Color(185, 185, 205, 240)); g.fillRect(7, 8, 2, 2)
-    g.setColor(new Color(110, 110, 130, 240)); g.fillRect(7, 10, 2, 2)
-    g.dispose()
-    ImageIO.write(img, 'png', target)
 }
 
 // TODO: add exact Apotheosis 1.21.1 NeoForge dependency used by your server/modpack.
