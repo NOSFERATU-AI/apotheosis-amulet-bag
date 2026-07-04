@@ -16,6 +16,8 @@ base { archivesName = mod_id }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
+def generatedTextureModId = 'apoth_talisman_bag'
+
 repositories {
     mavenCentral()
     maven { url = 'https://maven.neoforged.net/releases' }
@@ -38,9 +40,8 @@ neoForge {
 
 tasks.named('processResources') {
     doLast {
-        def modIdValue = project.property('mod_id')
-        writeGeneratedBagTexture(file("${destinationDir}/assets/${modIdValue}/textures/item/talisman_bag.png"))
-        writeGeneratedLockedSlotTexture(file("${destinationDir}/assets/${modIdValue}/textures/item/locked_slot.png"))
+        writeGeneratedBagTexture(new File(destinationDir, "assets/${generatedTextureModId}/textures/item/talisman_bag.png"))
+        writeGeneratedLockedSlotTexture(new File(destinationDir, "assets/${generatedTextureModId}/textures/item/locked_slot.png"))
     }
 }
 
