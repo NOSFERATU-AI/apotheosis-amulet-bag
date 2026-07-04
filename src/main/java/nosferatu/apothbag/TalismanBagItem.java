@@ -72,7 +72,7 @@ public class TalismanBagItem extends Item {
     }
 
     public static void openBag(ServerPlayer player, ItemStack bagStack) {
-        Component title = text("Сумка амулетов");
+        Component title = Component.translatable("container.apoth_talisman_bag.talisman_bag");
         RegistryAccess registries = player.level().registryAccess();
         MenuProvider provider = new SimpleMenuProvider((int id, Inventory inventory, Player menuPlayer) -> {
             TalismanBagContainer container = new TalismanBagContainer(bagStack, registries);
@@ -84,13 +84,13 @@ public class TalismanBagItem extends Item {
     public static boolean unlockNextSlot(ItemStack stack, ServerPlayer player) {
         int unlocked = getUnlockedSlots(stack);
         if (unlocked >= MAX_SLOTS) {
-            player.displayClientMessage(text("Все слоты уже открыты"), true);
+            player.displayClientMessage(Component.translatable("message.apoth_talisman_bag.all_slots_unlocked"), true);
             return false;
         }
 
         int cost = (unlocked + 1) * 100;
         if (!player.getAbilities().instabuild && player.experienceLevel < cost) {
-            player.displayClientMessage(text("Недостаточно уровней. Нужно: " + cost), true);
+            player.displayClientMessage(Component.translatable("message.apoth_talisman_bag.not_enough_levels", cost), true);
             return false;
         }
 
@@ -99,7 +99,7 @@ public class TalismanBagItem extends Item {
         }
 
         setUnlockedSlots(stack, unlocked + 1);
-        player.displayClientMessage(text("Открыт слот " + (unlocked + 1) + " за " + cost + " уровней"), true);
+        player.displayClientMessage(Component.translatable("message.apoth_talisman_bag.slot_unlocked", unlocked + 1, cost), true);
         return true;
     }
 
@@ -227,26 +227,15 @@ public class TalismanBagItem extends Item {
         addTooltip(stack, tooltip);
     }
 
-    private static Component text(String value) {
-        try {
-            Class<?> componentClass = Class.forName("net.minecraft.network.chat.Component");
-            Object component = componentClass.getMethod("literal", String.class).invoke(null, value);
-            return (Component) component;
-        }
-        catch (Throwable t) {
-            throw new IllegalStateException("Cannot create Minecraft text component", t);
-        }
-    }
-
     private static void addTooltip(ItemStack stack, List<Component> tooltip) {
         int unlocked = getUnlockedSlots(stack);
-        tooltip.add(text("Открыто слотов: " + unlocked + "/" + MAX_SLOTS));
+        tooltip.add(Component.translatable("tooltip.apoth_talisman_bag.unlocked", unlocked, MAX_SLOTS));
         if (unlocked < MAX_SLOTS) {
             int cost = (unlocked + 1) * 100;
-            tooltip.add(text("Следующий слот: " + cost + " уровней"));
+            tooltip.add(Component.translatable("tooltip.apoth_talisman_bag.next_cost", cost));
         }
-        tooltip.add(text("ПКМ — открыть сумку"));
-        tooltip.add(text("Shift + ПКМ — открыть следующий слот"));
+        tooltip.add(Component.translatable("tooltip.apoth_talisman_bag.open"));
+        tooltip.add(Component.translatable("tooltip.apoth_talisman_bag.unlock"));
     }
 
 }
