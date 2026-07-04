@@ -46,6 +46,10 @@ public class BagEvents {
     }
 
     private static void tickBag(ServerPlayer player, ItemStack bag) {
+        if (!TalismanBagItem.hasStoredItemsFast(bag)) {
+            return;
+        }
+
         RegistryAccess registries = player.level().registryAccess();
         TalismanBagContainer container = new TalismanBagContainer(bag, registries);
         int unlocked = TalismanBagItem.getUnlockedSlots(bag);
