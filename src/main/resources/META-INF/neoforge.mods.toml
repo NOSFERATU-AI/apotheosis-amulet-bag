@@ -1,0 +1,33 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="apoth_talisman_bag"
+version="1.21.1-1.0.0"
+displayName="Apotheosis Amulet Bag"
+authors="NOSFERATU"
+description='''
+NeoForge 1.21.1 Amulet Bag.
+'''
+
+[[dependencies.apoth_talisman_bag]]
+modId="neoforge"
+type="required"
+versionRange="[21.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.apoth_talisman_bag]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.apoth_talisman_bag]]
+modId="apotheosis"
+type="required"
+versionRange="[8,)"
+ordering="AFTER"
+side="BOTH"
