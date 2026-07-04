@@ -1,9 +1,8 @@
 package nosferatu.apothbag;
 
-import dev.shadowsoffire.apotheosis.Apoth;
-import dev.shadowsoffire.apotheosis.item.PotionCharmItem;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -11,7 +10,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
@@ -24,6 +22,8 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class TalismanBagItem extends Item {
@@ -31,12 +31,17 @@ public class TalismanBagItem extends Item {
     private static final String TAG_UNLOCKED = "UnlockedSlots";
     private static final String TAG_ITEMS = "Items";
 
+    private static Class<?> potionCharmItemClass;
+    private static Method potionCharmHasEffectMethod;
+    private static DataComponentType<Boolean> charmEnabledComponent;
+    private static boolean apotheosisReflectionTried = false;
+
     public TalismanBagItem(Properties properties) {
         super(properties);
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
         if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
@@ -48,12 +53,11 @@ public class TalismanBagItem extends Item {
             }
         }
 
-        return InteractionResult.SUCCESS;
+        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
 
     // Runtime fallback for 1.21.1 NeoForge jars that still call the SRG/obfuscated item-use method.
-    // The named use(...) method above is kept too, but this is the one that makes right-click work in your pack.
     public InteractionResultHolder<ItemStack> m_7203_(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
@@ -64,7 +68,7 @@ public class TalismanBagItem extends Item {
                 openBag(serverPlayer, stack);
             }
         }
-        return InteractionResultHolder.m_19092_(stack, level.isClientSide());
+        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
     }
 
     public static void openBag(ServerPlayer player, ItemStack bagStack) {
@@ -121,13 +125,45 @@ public class TalismanBagItem extends Item {
         setBagData(stack, tag);
     }
 
+    @SuppressWarnings("unchecked")
+    private static void initApotheosisReflection() {
+        if (apotheosisReflectionTried) return;
+        apotheosisReflectionTried = true;
+        try {
+            potionCharmItemClass = Class.forName("dev.shadowsoffire.apotheosis.item.PotionCharmItem");
+            potionCharmHasEffectMethod = potionCharmItemClass.getMethod("hasEffect", ItemStack.class);
+
+            Class<?> componentsClass = Class.forName("dev.shadowsoffire.apotheosis.Apoth$Components");
+            Field charmEnabledField = componentsClass.getField("CHARM_ENABLED");
+            charmEnabledComponent = (DataComponentType<Boolean>) charmEnabledField.get(null);
+        }
+        catch (Throwable ignored) {
+            potionCharmItemClass = null;
+            potionCharmHasEffectMethod = null;
+            charmEnabledComponent = null;
+        }
+    }
+
     public static boolean isPotionCharm(ItemStack stack) {
-        return !stack.isEmpty() && stack.getItem() instanceof PotionCharmItem && PotionCharmItem.hasEffect(stack);
+        if (stack.isEmpty()) return false;
+        initApotheosisReflection();
+        if (potionCharmItemClass == null || potionCharmHasEffectMethod == null) return false;
+        if (!potionCharmItemClass.isInstance(stack.getItem())) return false;
+        try {
+            Object result = potionCharmHasEffectMethod.invoke(null, stack);
+            return Boolean.TRUE.equals(result);
+        }
+        catch (Throwable ignored) {
+            return false;
+        }
     }
 
     public static void enableCharm(ItemStack stack) {
         if (isPotionCharm(stack)) {
-            stack.set(Apoth.Components.CHARM_ENABLED, true);
+            initApotheosisReflection();
+            if (charmEnabledComponent != null) {
+                stack.set(charmEnabledComponent, true);
+            }
         }
     }
 
@@ -161,9 +197,7 @@ public class TalismanBagItem extends Item {
             if (isPotionCharm(stack)) {
                 CompoundTag entry = new CompoundTag();
                 entry.putByte("Slot", (byte) slot);
-                // MC 1.21.1 ItemStack#save returns Tag, not CompoundTag. Store that tag directly.
                 entry.put("Item", stack.save(registries, new CompoundTag()));
-                // ListTag#add(Tag) does not exist in MC 1.21.1; use addTag(index, tag) instead.
                 list.addTag(list.size(), entry);
             }
         }
