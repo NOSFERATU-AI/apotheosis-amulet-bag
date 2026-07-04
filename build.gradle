@@ -38,8 +38,9 @@ neoForge {
 
 tasks.named('processResources') {
     doLast {
-        writeGeneratedBagTexture(file("${destinationDir}/assets/${mod_id}/textures/item/talisman_bag.png"))
-        writeGeneratedLockedSlotTexture(file("${destinationDir}/assets/${mod_id}/textures/item/locked_slot.png"))
+        def modIdValue = project.property('mod_id')
+        writeGeneratedBagTexture(file("${destinationDir}/assets/${modIdValue}/textures/item/talisman_bag.png"))
+        writeGeneratedLockedSlotTexture(file("${destinationDir}/assets/${modIdValue}/textures/item/locked_slot.png"))
     }
 }
 
