@@ -1,0 +1,12 @@
+{
+  "item.apoth_talisman_bag.talisman_bag": "Сумка амулетов",
+  "item.apoth_talisman_bag.locked_slot": "Закрытый слот",
+  "container.apoth_talisman_bag.talisman_bag": "Сумка амулетов",
+  "tooltip.apoth_talisman_bag.unlocked": "Открыто слотов: %s/%s",
+  "tooltip.apoth_talisman_bag.next_cost": "Цена следующего слота: %s уровней",
+  "tooltip.apoth_talisman_bag.open": "ПКМ: открыть",
+  "tooltip.apoth_talisman_bag.unlock": "Shift + ПКМ: открыть следующий слот",
+  "message.apoth_talisman_bag.all_slots_unlocked": "Все слоты сумки уже открыты.",
+  "message.apoth_talisman_bag.not_enough_levels": "Нужно %s уровней, чтобы открыть следующий слот.",
+  "message.apoth_talisman_bag.slot_unlocked": "Открыт слот %s за %s уровней."
+}
