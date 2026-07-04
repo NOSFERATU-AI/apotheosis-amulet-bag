@@ -1,6 +1,6 @@
 # Apotheosis Amulet Bag
 
-**Apotheosis Amulet Bag** is a small NeoForge addon for Minecraft 1.21.1 that adds a dedicated bag for Apotheosis potion charms / amulets.
+**Apotheosis Amulet Bag** is a small NeoForge addon for Minecraft 1.21.1 that adds a dedicated bag for Apotheosis amulets.
 
 The bag is designed to keep several Apotheosis charms in one item while still allowing their effects to work from inside the bag.
 
