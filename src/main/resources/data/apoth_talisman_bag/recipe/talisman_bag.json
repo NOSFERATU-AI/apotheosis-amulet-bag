@@ -7,11 +7,21 @@
     "LCL"
   ],
   "key": {
-    "L": "minecraft:leather",
-    "G": "minecraft:gold_ingot",
-    "E": "minecraft:ender_pearl",
-    "S": "minecraft:string",
-    "C": "minecraft:chest"
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "E": {
+      "item": "minecraft:ender_pearl"
+    },
+    "S": {
+      "item": "minecraft:string"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    }
   },
   "result": {
     "id": "apoth_talisman_bag:talisman_bag",
