@@ -31,16 +31,15 @@ public class BagEvents {
         if (player.level().isClientSide()) return;
 
         Inventory inventory = player.getInventory();
-        for (int i = 0; i < inventory.getContainerSize(); i++) {
-            ItemStack stack = inventory.getItem(i);
-            if (stack.getItem() instanceof TalismanBagItem) {
+        for (ItemStack stack : inventory.items) {
+            if (stack.getItem() instanceof TalismanBagItem && TalismanBagItem.hasStoredItemsFast(stack)) {
                 tickBag(player, stack);
                 return;
             }
         }
 
         ItemStack offhand = player.getOffhandItem();
-        if (offhand.getItem() instanceof TalismanBagItem) {
+        if (offhand.getItem() instanceof TalismanBagItem && TalismanBagItem.hasStoredItemsFast(offhand)) {
             tickBag(player, offhand);
         }
     }
