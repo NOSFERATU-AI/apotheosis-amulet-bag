@@ -1,10 +1,12 @@
 package nosferatu.apothbag;
 
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -27,7 +29,14 @@ public class ApothTalismanBag {
 
     public ApothTalismanBag(IEventBus modBus, ModContainer modContainer) {
         ITEMS.register(modBus);
+        modBus.addListener(ApothTalismanBag::addCreative);
         NeoForge.EVENT_BUS.addListener(BagEvents::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(BagEvents::onRightClickItem);
+    }
+
+    private static void addCreative(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            event.accept(TALISMAN_BAG.get());
+        }
     }
 }
